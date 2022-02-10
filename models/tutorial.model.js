@@ -1,5 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Tutorial = sequelize.define("tutorial", {
+      id:{
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       title: {
         type: Sequelize.STRING
       },
@@ -8,7 +13,13 @@ module.exports = (sequelize, Sequelize) => {
       },
       published: {
         type: Sequelize.BOOLEAN
-      }
+      },
+
+    }, {
+      timestamps: false,
+      createdAt: false,
+      updatedAt: false,
+
     });
     return Tutorial;
   };

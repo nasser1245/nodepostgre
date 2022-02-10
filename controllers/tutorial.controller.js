@@ -12,6 +12,7 @@ exports.create = (req, res) => {
     }
     // Create a Tutorial
     const tutorial = {
+        id: parseInt(req.body.id),
         title: req.body.title,
         description: req.body.description,
         published: req.body.published ? req.body.published : false

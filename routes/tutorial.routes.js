@@ -1,19 +1,39 @@
 module.exports = app => {
   const tutorials = require("../controllers/tutorial.controller.js");
-  var router = require("express").Router();
+  const comments = require("../controllers/comment.controller.js");
+  let tutRoutes = require("express").Router();
+  let commRoutes = require("express").Router();
   // Create a new Tutorial
-  router.post("/", tutorials.create);
+  tutRoutes.post("/", tutorials.create);
   // Retrieve all Tutorials
-  router.get("/", tutorials.findAll);
+  tutRoutes.get("/", tutorials.findAll);
   // Retrieve all published Tutorials
-  router.get("/published", tutorials.findAllPublished);
+  tutRoutes.get("/published", tutorials.findAllPublished);
   // Retrieve a single Tutorial with id
-  router.get("/:id", tutorials.findOne);
+  tutRoutes.get("/:id", tutorials.findOne);
   // Update a Tutorial with id
-  router.put("/:id", tutorials.update);
+  tutRoutes.put("/:id", tutorials.update);
   // Delete a Tutorial with id
-  router.delete("/:id", tutorials.delete);
-  // Create a new Tutorial
-  router.delete("/", tutorials.deleteAll);
-  app.use('/api/tutorials', router);
+  tutRoutes.delete("/:id", tutorials.delete);
+  // Delete all Tutorials
+  tutRoutes.delete("/", tutorials.deleteAll);
+  // Add tutorial route to main app 
+
+  // Find all comments by tutorialID
+  tutRoutes.get("/comments/:id", comments.findAll)
+
+  app.use('/api/tutorials', tutRoutes);
+
+
+  // Create a new comment
+  commRoutes.post("/:tutorialID", comments.addComment);
+  // Delete a comment with Id
+  commRoutes.delete("/:id", comments.delete)
+  // Find one comment by commentID
+  commRoutes.get("/:id", comments.findOne)
+    // Find one comment by commentID
+    commRoutes.put("/:id", comments.update)
+
+  app.use('/api/comments', commRoutes);
+
 };

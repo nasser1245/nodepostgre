@@ -1,6 +1,10 @@
 # db configurations
 configs
 
+
+# test snippet codes folder
+#tests
+
 # Logs
 logs
 *.log

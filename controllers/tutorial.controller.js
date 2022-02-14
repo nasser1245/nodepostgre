@@ -1,8 +1,34 @@
 const db = require("../models");
+const tagModel = require("../models/tag.model");
 const Tutorial = db.tutorials;
 const Op = db.Sequelize.Op;
 // Create and Save a new Tutorial
-exports.create = (req, res) => {
+exports.create =async (req, res) => {
+  try{
+  await db.comments.sync({ force: true });
+  console.log("The table for the User model was just (re)created!");
+  }catch(err){
+    console.log("\n\nError Hapenned!\n\n");
+    return;
+  }
+
+  try{
+    await db.tags.sync({ force: true });
+    console.log("The table for the User model was just (re)created!");
+    }catch(err){
+      console.log("\n\nError Hapenned!\n\n");
+      return;
+    }
+    
+
+    try{
+      await db.tutorials.sync({ force: true });
+      console.log("The table for the User model was just (re)created!");
+      }catch(err){
+        console.log("\n\nError Hapenned!\n\n");
+        return;
+      }
+
   // Validate request
   if (!req.body.title) {
     res.status(400).send({
@@ -33,8 +59,23 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
-  
-  Tutorial.findAll({ where: condition, include:["comments"] } )
+
+  Tutorial.findAll({
+    where: condition,
+    include: [{
+      model: db.comments
+      , as: "comments"
+    },
+    {
+      model: db.tags,
+      as: "tags",
+      attributes:["id","name"],
+      through:{
+        attributes:[]
+      }
+    }
+    ]
+  })
     .then(data => {
       res.send(data);
     })
@@ -48,7 +89,7 @@ exports.findAll = (req, res) => {
 // Find a single Tutorial with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
-  Tutorial.findByPk(id, {include: ["comments"]})
+  Tutorial.findByPk(id, { include: ["comments"] })
     .then(data => {
       if (data) {
         res.send(data);

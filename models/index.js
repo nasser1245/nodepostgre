@@ -1,4 +1,4 @@
-const dbConfig = require("../config/db.config");
+const dbConfig = require("../configs/db.config");
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -21,16 +21,16 @@ comments = require("./comment.model.js")(sequelize, Sequelize);
 tags = require("./tag.model.js")(sequelize, Sequelize);
 tutorials.hasMany(comments, { as: "comments", foreignKey: "tutorialID" });
 
-tutorials.belongsToMany(tags, {
-    through: "tutorial_tag",
-    as: "tags",
-    foreignKey: "tutorial_id",
-});
-
 tags.belongsToMany(tutorials, {
     through: "tutorial_tag",
     as: "tutorials",
     foreignKey: "tag_id"
+});
+
+tutorials.belongsToMany(tags, {
+    through: "tutorial_tag",
+    as: "tags",
+    foreignKey: "tutorial_id",
 });
 
 db.tutorials = tutorials;
